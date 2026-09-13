@@ -9,4 +9,4 @@ Plain static HTML/CSS/JavaScript under `dist/`. No build or dependencies. The te
 Real numeric GeoTIFF import, metadata inspection, depth styling, profiles, and provenance overlays are proposed in the final lesson and are not implemented yet.
 
 ## Content maintenance
-Sources checked September 2026. Recheck linked product releases, access terms and documentation before changing dataset instructions. Preserve the distinction between cell spacing, effective resolution, uncertainty and archaeological evidence.
+Sources checked 2026-09-12. Recheck linked product releases, access terms and documentation before changing dataset instructions. Preserve the distinction between cell spacing, effective resolution, uncertainty and archaeological evidence.
