@@ -10,3 +10,7 @@ Real numeric GeoTIFF import, metadata inspection, depth styling, profiles, and p
 
 ## Content maintenance
 Sources checked 2026-09-12. Recheck linked product releases, access terms and documentation before changing dataset instructions. Preserve the distinction between cell spacing, effective resolution, uncertainty and archaeological evidence.
+
+## Offline use
+
+After one successful online visit, the service worker caches the complete application shell. The tutorial, navigation, synthetic terrain visualization and quiz then work offline. External source links still require a connection.
