@@ -1,4 +1,4 @@
-const CACHE_NAME = 'batyhmetry-playground-v1';
+const CACHE_NAME = 'bathymetry-playground-v2';
 const APP_SHELL = [
   '/',
   '/index.html',
