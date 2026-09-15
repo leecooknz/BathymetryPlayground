@@ -1,4 +1,4 @@
-# BatyhmetryPlayground
+# BathymetryPlayground
 
 A self-paced introduction to bathymetry with eight chapters, vetted primary-source links, a synthetic resolution demonstration, and a practical Malta subset exercise.
 
