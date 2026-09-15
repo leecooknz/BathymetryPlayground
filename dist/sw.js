@@ -1,11 +1,57 @@
-// Network-only: always honor the hosting sign-in gate and serve current lessons.
-// No private pages or authentication responses are cached for offline access.
-self.addEventListener('install', event => event.waitUntil(self.skipWaiting()));
-self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
+const CACHE_NAME = 'batyhmetry-playground-v1';
+const APP_SHELL = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/app.js',
+  '/install.js',
+  '/manifest.webmanifest',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/icons/icon-maskable-512.png'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(names => Promise.all(
+        names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
+      ))
+      .then(() => self.clients.claim())
+  );
+});
+
 self.addEventListener('fetch', event => {
-  if (event.request.mode !== 'navigate' || new URL(event.request.url).origin !== self.location.origin) return;
-  event.respondWith(fetch(event.request).catch(() => new Response(
-    '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#096e74"><title>BatyhmetryPlayground — Offline</title><body style="font:18px/1.6 system-ui;padding:32px;background:#f5f8f8;color:#142f3a"><h1>You’re offline</h1><p>Connect to the internet to open BatyhmetryPlayground.</p><a href="/">Try again</a></body></html>',
-    { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } }
-  )));
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  event.respondWith(
+    caches.match(request).then(cached => {
+      if (cached) return cached;
+
+      return fetch(request).then(response => {
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+        }
+        return response;
+      }).catch(() => {
+        if (request.mode === 'navigate') {
+          return caches.match('/index.html').then(page => page || caches.match('/'));
+        }
+        return new Response('', { status: 503, statusText: 'Offline' });
+      });
+    })
+  );
 });
